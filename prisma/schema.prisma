@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SYSTEM
+  ADMIN
+  USER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  user_name     String   @unique
+  password  String
+  role      Role     @default(SYSTEM)
+  createdAt DateTime @default(now())
+
+}
+
+model Ticket {
+  id           String @id @default(uuid())
+  ticketNumber Int @unique @default(autoincrement())
+  // Datos del empleado (formulario público)
+  reporterName  String
+  area          Area
+  category      Category
+  description   String
+
+  // Datos internos
+  status        Status @default(ABIERTO)
+  priority      Priority     @default(MEDIO)
+  comments      String?      // opcional
+  createdAt     DateTime     @default(now())
+  closedAt      DateTime?
+
+}
+
+enum Status {
+  ABIERTO
+  EN_PROCESO
+  RESUELTO
+  CERRADO
+}
+
+enum Priority {
+  BAJO
+  MEDIO
+  ALTO
+  URGENTE
+}
+
+enum Category {
+  HARDWARE
+  SOFTWARE
+  NETWORK
+  PRINTER
+  SYSTEM_ERROR
+  OTHER
+}
+
+enum Area {
+  TELEFONOS
+  RECEPCION_TA
+  RECEPCION_TB
+  CONTABILIDAD
+  COSTOS
+  RECURSOS_HUMANOS
+  MANTENIMIENTO
+  CAPITANES
+  NOMINAS
+  AMA_DE_LLAVES
+  RESERVAS
+  BANQUETES
+  ATENCION_A_SOCIOS
+}
