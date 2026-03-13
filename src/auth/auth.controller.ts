@@ -4,7 +4,7 @@ import type { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards, Req } from '@nestjs/common';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -20,7 +20,8 @@ async login(
 
   res.cookie('token', result.access_token, {
     httpOnly: true,
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
   });
 
   return { message: 'Login exitoso'};
