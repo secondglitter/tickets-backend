@@ -4,7 +4,7 @@ import type { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards, Req } from '@nestjs/common';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
