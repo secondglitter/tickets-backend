@@ -28,7 +28,7 @@ async function createAdmin() {
       },
     })
 
-    console.log('✅ Admin creado o ya existente:', admin.user_name)
+    console.log('✅ Admin creado o ya existente:')
 
   } catch (error) {
     console.error('❌ Error creando admin:', error)
