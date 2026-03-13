@@ -8,21 +8,21 @@ import { JwtAuthGuard } from './jwt/jwt.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
-  async login(@Body() body, @Res({ passthrough: true }) res: Response) {
-    // Autenticación y generación del token
-    const result = await this.authService.login(body.user_name, body.password);
+@Post('login')
+async login(@Body() body, @Res({ passthrough: true }) res: Response) {
+  const result = await this.authService.login(body.user_name, body.password);
+  
+  console.log('Token generado:', result.access_token);  // Agregar log
 
-    // Establecer la cookie con el token JWT
-    res.cookie('token', result.access_token, {
-      httpOnly: true,   // No accesible desde JS
-      secure: process.env.NODE_ENV === 'production', // Solo en producción (si usas HTTPS)
-      sameSite: 'lax', // Permitir solicitudes cross-origin
-      path: '/', // Asegura que la cookie esté disponible en todas las rutas
-    });
+  res.cookie('token', result.access_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    path: '/',
+  });
 
-    return { message: 'Login exitoso' };
-  }
+  return { message: 'Login exitoso' };
+}
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
