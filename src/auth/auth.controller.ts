@@ -17,7 +17,7 @@ export class AuthController {
     res.cookie('token', result.access_token, {
       httpOnly: true,   // No accesible desde JS
       secure: process.env.NODE_ENV === 'production', // Solo en producción (si usas HTTPS)
-      sameSite: 'none', // Permitir solicitudes cross-origin
+      sameSite: 'lax', // Permitir solicitudes cross-origin
       path: '/', // Asegura que la cookie esté disponible en todas las rutas
     });
 
