@@ -15,20 +15,21 @@ export class AuthController {
 
     // 2. Establecer la cookie con el token
     res.cookie('token', result.access_token, {
-      httpOnly: true, // El frontend no puede leer esta cookie (más seguro)
-      secure: true,   // Esto requiere HTTPS en producción
-      sameSite: 'none', // Permite cookies en peticiones cross-origin (CORS)
+      httpOnly: true, // La cookie es accesible solo por el servidor (no desde JS)
+      secure: process.env.NODE_ENV === 'production', // Solo en HTTPS en producción
+      sameSite: 'none', // Permite solicitudes cross-origin (importantísimo)
+      path: '/', // La cookie es válida para todas las rutas
     });
 
     // 3. Enviar respuesta de éxito
     return { message: 'Login exitoso' };
   }
 
-@Post('logout')
-logout(@Res({ passthrough: true }) res: Response) {
-  res.clearCookie('token');
-  return { message: 'Logout exitoso' };
-}
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token');
+    return { message: 'Logout exitoso' };
+  }
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req: any) {
