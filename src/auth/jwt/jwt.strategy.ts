@@ -6,11 +6,13 @@ import { Request } from 'express';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET no está definido");
+    }
+
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (req: Request) => {
-          return req?.cookies?.token; // 👈 AQUÍ EL CAMBIO
-        },
+        (req: Request) => req?.cookies?.token || null,
       ]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET,
