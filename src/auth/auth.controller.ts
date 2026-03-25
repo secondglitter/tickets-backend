@@ -21,7 +21,8 @@ async login(
   res.cookie("token", result.access_token, {
     httpOnly: true,
     secure: true,          // 🔥 obligatorio en producción
-    sameSite: "none",      // 🔥 obligatorio para cross-domain
+    sameSite: "lax", 
+     path: "/",     // 🔥 obligatorio para cross-domain
   });
 
   return { message: "Login exitoso" };
