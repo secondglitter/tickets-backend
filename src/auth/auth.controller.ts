@@ -33,4 +33,15 @@ async login(
     res.clearCookie('token');
     return { message: 'Logout exitoso' };
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("profile")
+  getProfile(@Req() req: any) {
+    return {
+      id: req.user.sub,
+      name: req.user.name,
+      user_name: req.user.user_name,
+      role: req.user.role,
+    };
+  }
 }

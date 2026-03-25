@@ -1,7 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Req, UseGuards } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { Roles } from 'src/auth/roles/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles("ADMIN", "SYSTEM")
 @Controller('tickets')
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
