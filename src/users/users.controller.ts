@@ -20,7 +20,7 @@ export class UsersController {
 
   // 🔒 Validar que sea ADMIN
   private checkAdmin(req: any) {
-    if (req.user.role !== 'ADMIN') { // 👈 directo sin enum
+    if (!req.user || req.user.role !== 'ADMIN') {
       throw new ForbiddenException(
         'Solo el administrador puede acceder a esta sección',
       );
@@ -45,26 +45,17 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() data: any,
-    @Req() req: any,
-  ) {
+  update(@Param('id') id: string, @Body() data: any, @Req() req: any) {
     this.checkAdmin(req);
     return this.usersService.updateUser(id, data);
   }
 
   @Delete(':id')
-  remove(
-    @Param('id') id: string,
-    @Req() req: any,
-  ) {
+  remove(@Param('id') id: string, @Req() req: any) {
     this.checkAdmin(req);
 
     if (id === req.user.sub) {
-      throw new ForbiddenException(
-        'No puedes eliminar tu propio usuario',
-      );
+      throw new ForbiddenException('No puedes eliminar tu propio usuario');
     }
 
     return this.usersService.deleteUser(id);
