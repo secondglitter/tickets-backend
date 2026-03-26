@@ -8,19 +8,25 @@ import { JwtAuthGuard } from './jwt/jwt.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
-  async login(@Body() body: any, @Res({ passthrough: true }) res: Response) {
-    const result = await this.authService.login(body.user_name, body.password);
+@Post("login")
+async login(
+  @Body() body: any,
+  @Res({ passthrough: true }) res: Response
+) {
+  const result = await this.authService.login(
+    body.user_name,
+    body.password
+  );
 
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      domain: '.up.railway.app',
-    });
-    return { message: 'Login exitoso' };
-  }
+  res.cookie("token", result.access_token, {
+    httpOnly: true,
+    secure: true,          // 🔥 obligatorio en producción
+    sameSite: "none", 
+     path: "/",     // 🔥 obligatorio para cross-domain
+  });
+
+  return { message: "Login exitoso" };
+}
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
